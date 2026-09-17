@@ -1,0 +1,52 @@
+Mandatory List Matcher v0.3 — automated validation
+
+Dataset: 1,749 official products / 164 sectors
+Source file: mandatory-list-2026-09-17.xlsx
+
+1) Full official-name regression suite
+Assertions: 7,031
+Result: PASS 7,031 / FAIL 0
+
+2) Original imagination/adversarial set
+Positive free-form queries: 65
+Correct product ranked #1: 63/65 (96.9%)
+Correct product within top 3: 65/65 (100%)
+Negative/safety queries: 5
+Wrong automatic matches: 0
+Note: two deliberately ambiguous HVAC phrases remain review cases instead of forced auto-matches.
+
+3) Holdout set #1 (not used by the original v0.2 tuning)
+Positive queries: 45
+Correct product ranked #1: 45/45 (100%)
+Correct product within top 3: 45/45 (100%)
+Negative/safety queries: 5
+Wrong automatic matches: 0
+
+4) Holdout set #2 (more colloquial field wording)
+Positive queries: 23
+Correct product ranked #1: 23/23 (100%)
+Correct product within top 3: 23/23 (100%)
+Negative/safety queries: 5
+Wrong automatic matches: 0
+
+5) Final unseen English/mixed technical set
+Positive queries: 22
+Correct product ranked #1: 22/22 (100%)
+Correct product within top 3: 22/22 (100%)
+Negative/safety queries: 5
+Wrong automatic matches: 0
+
+Coverage added in v0.3:
+- Arabic procurement slang/transliteration: فلتر/مرشح، بنزين/وقود، كبينة، فاكيوم، دي سي، LV/MV/HV، ترانس، بريكر، سويتش بورد، فاير ألارم، محبس/فالف، دكت، سبلت، باكدج، AHU، سيكوريت، فلوت جلاس، بوية، تنر، تانكي، اير كمبروسر، شفاط، كلينر، بامب، فوم، كوبلن، كاب.
+- Voltage interpretation for electrical context, including kV ranges.
+- Valve subtype resolution with medical false-positive guards.
+- Cable / transformer / breaker / HVAC subtype resolution.
+- PVC vs HDPE material conflict handling.
+- Pipe fitting subtype handling: elbow / coupling / cap.
+- Paint material vs paint-tool/thinner guards.
+- Potable-water specificity guard.
+- Cutting oil and anti-corrosion grease concepts.
+- Common breaker acronyms: MCCB / ACB / GCB.
+
+Important limitation:
+These tests demonstrate strong internal and synthetic-test performance. They do NOT prove a universal real-world accuracy percentage for every wording that departments may use. Production accuracy must still be measured on a separately labeled corpus of real department line items reviewed by subject-matter staff.

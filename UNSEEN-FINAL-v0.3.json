@@ -1,0 +1,272 @@
+[
+  {
+    "q": "car battery",
+    "exp": "2154",
+    "result": "TOP_OK",
+    "status": "none",
+    "confidence": 34,
+    "top": "2154",
+    "name": "بطاريات مركبات",
+    "top3": "2154/3108/2227"
+  },
+  {
+    "q": "air compressor",
+    "exp": "2268",
+    "result": "TOP_OK",
+    "status": "match",
+    "confidence": 100,
+    "top": "2268",
+    "name": "ضاغطات هواء",
+    "top3": "2268/2071/2166"
+  },
+  {
+    "q": "exhaust fan",
+    "exp": "2124",
+    "result": "TOP_OK",
+    "status": "review",
+    "confidence": 74,
+    "top": "2124",
+    "name": "مراوح الشفط الكهربائية",
+    "top3": "2124/3131/2382"
+  },
+  {
+    "q": "solar DC cable",
+    "exp": "2272",
+    "result": "TOP_OK",
+    "status": "review",
+    "confidence": 100,
+    "top": "2272",
+    "name": "كابلات التيار المستمر",
+    "top3": "2272/2267/2364"
+  },
+  {
+    "q": "33KV power cable",
+    "exp": "2083",
+    "result": "TOP_OK",
+    "status": "none",
+    "confidence": 22,
+    "top": "2083",
+    "name": "كابلات الطاقة الكهربائية متوسطة الجهد",
+    "top3": "2083/2093/2272"
+  },
+  {
+    "q": "132KV transformer",
+    "exp": "2115",
+    "result": "TOP_OK",
+    "status": "review",
+    "confidence": 54,
+    "top": "2115",
+    "name": "محولات الطاقة الكهربائية ذات الجهد العالي",
+    "top3": "2115/6023/1328"
+  },
+  {
+    "q": "circuit breaker",
+    "exp": "2294",
+    "result": "TOP_OK",
+    "status": "match",
+    "confidence": 100,
+    "top": "2294",
+    "name": "قاطع تيار",
+    "top3": "2294/2157/2265"
+  },
+  {
+    "q": "MCCB breaker",
+    "exp": "2264",
+    "result": "TOP_OK",
+    "status": "match",
+    "confidence": 100,
+    "top": "2264",
+    "name": "القواطع الكهربائية المقولبة",
+    "top3": "2264/2157/2294"
+  },
+  {
+    "q": "ACB breaker",
+    "exp": "2265",
+    "result": "TOP_OK",
+    "status": "review",
+    "confidence": 68,
+    "top": "2265",
+    "name": "القواطع الكهربائية الهوائية",
+    "top3": "2265/2294/2166"
+  },
+  {
+    "q": "gas circuit breaker",
+    "exp": "2157",
+    "result": "TOP_OK",
+    "status": "match",
+    "confidence": 100,
+    "top": "2157",
+    "name": "القواطع الكهربائية الغازية",
+    "top3": "2157"
+  },
+  {
+    "q": "fire alarm panel",
+    "exp": "2223",
+    "result": "TOP_OK",
+    "status": "match",
+    "confidence": 100,
+    "top": "2223",
+    "name": "لوحة تحكم إنذار الحريق",
+    "top3": "2223/2515/2127"
+  },
+  {
+    "q": "gate valve",
+    "exp": "2118",
+    "result": "TOP_OK",
+    "status": "match",
+    "confidence": 100,
+    "top": "2118",
+    "name": "الصمامات البوابية",
+    "top3": "2118/2061/2136"
+  },
+  {
+    "q": "HVAC duct insulation",
+    "exp": "2075",
+    "result": "TOP_OK",
+    "status": "review",
+    "confidence": 100,
+    "top": "2075",
+    "name": "عزل قنوات التكييف: العزل لقنوات التكييف و التهوية",
+    "top3": "2075/2145/2079"
+  },
+  {
+    "q": "cabin filter",
+    "exp": "2252",
+    "result": "TOP_OK",
+    "status": "match",
+    "confidence": 100,
+    "top": "2252",
+    "name": "فلتر هواء المقصورة",
+    "top3": "2252/2317/2363"
+  },
+  {
+    "q": "diesel fuel filter",
+    "exp": "3134",
+    "result": "TOP_OK",
+    "status": "review",
+    "confidence": 98,
+    "top": "3134",
+    "name": "مرشحات الوقود",
+    "top3": "3134/2152/2317"
+  },
+  {
+    "q": "paint thinner",
+    "exp": "6020",
+    "result": "TOP_OK",
+    "status": "match",
+    "confidence": 100,
+    "top": "6020",
+    "name": "مذيب دهان",
+    "top3": "6020"
+  },
+  {
+    "q": "general cleaner",
+    "exp": "3010",
+    "result": "TOP_OK",
+    "status": "match",
+    "confidence": 88,
+    "top": "3010",
+    "name": "منظفات للأغراض عامة",
+    "top3": "3010/3009/3002"
+  },
+  {
+    "q": "potable water tank",
+    "exp": "2067",
+    "result": "TOP_OK",
+    "status": "match",
+    "confidence": 100,
+    "top": "2067",
+    "name": "خزانات تخزين مياه الشرب للمرافق",
+    "top3": "2067/3102/3103"
+  },
+  {
+    "q": "thermal receipt paper",
+    "exp": "2612",
+    "result": "TOP_OK",
+    "status": "none",
+    "confidence": 47,
+    "top": "2612",
+    "name": "ورق حراري",
+    "top3": "2612/2025/2145"
+  },
+  {
+    "q": "computer printing paper",
+    "exp": "3203",
+    "result": "TOP_OK",
+    "status": "none",
+    "confidence": 47,
+    "top": "3203",
+    "name": "ورق للطباعة بالكمبيوتر",
+    "top3": "3203/2810/1209"
+  },
+  {
+    "q": "tempered glass",
+    "exp": "2186",
+    "result": "TOP_OK",
+    "status": "match",
+    "confidence": 100,
+    "top": "2186",
+    "name": "الزجاج المقوى بالحرارة",
+    "top3": "2186"
+  },
+  {
+    "q": "float glass",
+    "exp": "2142",
+    "result": "TOP_OK",
+    "status": "match",
+    "confidence": 100,
+    "top": "2142",
+    "name": "الزجاج العائم",
+    "top3": "2142"
+  },
+  {
+    "q": "tablet computer",
+    "exp": "",
+    "result": "SAFE",
+    "status": "none",
+    "confidence": 38,
+    "top": "2810",
+    "name": "خادم الحاسوب",
+    "top3": "2810/3203/0364"
+  },
+  {
+    "q": "office desk lamp",
+    "exp": "",
+    "result": "SAFE",
+    "status": "none",
+    "confidence": 16,
+    "top": "7013",
+    "name": "طاولات مكاتب",
+    "top3": "7013/2709/2333"
+  },
+  {
+    "q": "gear oil filter",
+    "exp": "",
+    "result": "SAFE",
+    "status": "review",
+    "confidence": 61,
+    "top": "6018",
+    "name": "زيت ناقل سرعة",
+    "top3": "6018/6019/6053"
+  },
+  {
+    "q": "security camera",
+    "exp": "",
+    "result": "SAFE",
+    "status": "none",
+    "confidence": 34,
+    "top": "2130",
+    "name": "أعمدة أنظمة الكاميرات",
+    "top3": "2130/2034/2507"
+  },
+  {
+    "q": "coffee machine",
+    "exp": "",
+    "result": "SAFE",
+    "status": "review",
+    "confidence": 75,
+    "top": "3060",
+    "name": "قهوة",
+    "top3": "3060/2611/2336"
+  }
+]

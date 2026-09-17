@@ -1,0 +1,19 @@
+Source file audit
+
+Rows in worksheet: 1,750 including header
+Official product records: 1,749
+Columns: 8
+Sectors: 164
+Duplicate official codes: 0
+Blank official codes: 0
+Missing Arabic product names: 0
+Missing English product names: 0
+Missing descriptions: 0
+Missing sectors: 0
+Normalized duplicate Arabic-name groups: 116
+Duplicate English-name groups: 91
+
+Source SHA-256:
+08aa5344a18da02d72acba20209411091efc0f9df97108987c1332c065af8b0d
+
+Note: duplicate names are valid data conditions that may represent multiple official codes. The matcher surfaces this as ambiguity rather than inventing a single code.

@@ -1,0 +1,702 @@
+[
+  {
+    "outcome": "TOP_OK",
+    "query": "فلتر بنزين للسيارة",
+    "status": "review",
+    "confidence": 92,
+    "top_code": "3134",
+    "top_name": "مرشحات الوقود",
+    "top3": "3134/3118/2317",
+    "expected": "3134"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "مصفاة وقود للمركبات",
+    "status": "none",
+    "confidence": 14,
+    "top_code": "3134",
+    "top_name": "مرشحات الوقود",
+    "top3": "3134/2808/3123",
+    "expected": "3134"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "فلتر ديزل للمولد الاحتياطي",
+    "status": "none",
+    "confidence": 48,
+    "top_code": "3134",
+    "top_name": "مرشحات الوقود",
+    "top3": "3134/2152/0001",
+    "expected": "3134"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "فلتر هوا للمكيف المركزي",
+    "status": "review",
+    "confidence": 70,
+    "top_code": "2270",
+    "top_name": "مرشحات هواء",
+    "top3": "2270/2252/2242",
+    "expected": "2242/2270"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "فلتر مكيف",
+    "status": "match",
+    "confidence": 85,
+    "top_code": "2270",
+    "top_name": "مرشحات هواء",
+    "top3": "2270/2252/2242",
+    "expected": "2242/2270"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "فلتر كبينة للسيارة",
+    "status": "review",
+    "confidence": 75,
+    "top_code": "2252",
+    "top_name": "فلتر هواء المقصورة",
+    "top3": "2252/3118/2317",
+    "expected": "2252"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "مصفاة رمل للمسبح",
+    "status": "none",
+    "confidence": 13,
+    "top_code": "2253",
+    "top_name": "فلتر رملي",
+    "top3": "2253/0001/0002",
+    "expected": "2253"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "فلتر ماكينة قهوة",
+    "status": "review",
+    "confidence": 77,
+    "top_code": "2611",
+    "top_name": "فلتر قهوة",
+    "top3": "2611/3060/2236",
+    "expected": "2611"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "فلتر فاكيوم صناعي",
+    "status": "match",
+    "confidence": 100,
+    "top_code": "2250",
+    "top_name": "مرشحات تفريغ",
+    "top3": "2250/2363/2139",
+    "expected": "2250"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "مصفاة خط الغاز",
+    "status": "none",
+    "confidence": 40,
+    "top_code": "2341",
+    "top_name": "مرشحات خط انابيب غاز",
+    "top3": "2341/2309/2342",
+    "expected": "2341"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "كيبل دي سي",
+    "status": "match",
+    "confidence": 100,
+    "top_code": "2272",
+    "top_name": "كابلات التيار المستمر",
+    "top3": "2272/2364/2083",
+    "expected": "2272"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "سلك DC",
+    "status": "none",
+    "confidence": 37,
+    "top_code": "2272",
+    "top_name": "كابلات التيار المستمر",
+    "top3": "2272/2258/2114",
+    "expected": "2272"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "كيبل كهرباء ضغط منخفض",
+    "status": "review",
+    "confidence": 54,
+    "top_code": "2094",
+    "top_name": "كابلات الطاقة الكهربائية منخفضة الجهد",
+    "top3": "2094/2273/2364",
+    "expected": "2094"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "كيبل LV",
+    "status": "review",
+    "confidence": 74,
+    "top_code": "2094",
+    "top_name": "كابلات الطاقة الكهربائية منخفضة الجهد",
+    "top3": "2094/2273/2085",
+    "expected": "2094"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "كيبل 11KV",
+    "status": "none",
+    "confidence": 36,
+    "top_code": "2083",
+    "top_name": "كابلات الطاقة الكهربائية متوسطة الجهد",
+    "top3": "2083/2274/2095",
+    "expected": "2083"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "كيبل 132KV",
+    "status": "none",
+    "confidence": 34,
+    "top_code": "2105",
+    "top_name": "كابلات الطاقة الكهربائية عالية الجهد : كابلات الجهد العالي",
+    "top3": "2105/7136/2109",
+    "expected": "2105"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "كيبل كنترول",
+    "status": "match",
+    "confidence": 96,
+    "top_code": "2093",
+    "top_name": "التحكم بجهد كابلات الطاقة الكهربائية: كابلات التحكم",
+    "top3": "2093/2272/2364",
+    "expected": "2093"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "كيابل بحرية تحت البحر",
+    "status": "none",
+    "confidence": 45,
+    "top_code": "2364",
+    "top_name": "الكابلات البحرية",
+    "top3": "2364/0001/0002",
+    "expected": "2364"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "تراي كيابل كهرباء",
+    "status": "match",
+    "confidence": 100,
+    "top_code": "2090",
+    "top_name": "حاملات الكابلات للأنظمة الكهربائية",
+    "top3": "2090/0246/0247",
+    "expected": "2090"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "اكسسوارات كيبل ضغط منخفض",
+    "status": "none",
+    "confidence": 48,
+    "top_code": "2273",
+    "top_name": "إكسسوارات الكابلات للجهد المنخفض",
+    "top3": "2273/2350/2094",
+    "expected": "2273"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "ترانس جهد منخفض",
+    "status": "match",
+    "confidence": 100,
+    "top_code": "2086",
+    "top_name": "محول الجهد المنخفض",
+    "top3": "2086/6023/1328",
+    "expected": "2086"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "ترانس ميديم فولتج",
+    "status": "match",
+    "confidence": 100,
+    "top_code": "2080",
+    "top_name": "محولات الجهد المتوسط",
+    "top3": "2080/2095/6023",
+    "expected": "2080"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "محول 11KV",
+    "status": "review",
+    "confidence": 81,
+    "top_code": "2080",
+    "top_name": "محولات الجهد المتوسط",
+    "top3": "2080/6023/1328",
+    "expected": "2080"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "محول ضغط عالي",
+    "status": "none",
+    "confidence": 41,
+    "top_code": "2115",
+    "top_name": "محولات الطاقة الكهربائية ذات الجهد العالي",
+    "top3": "2115/1328/1162",
+    "expected": "2115"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "بريكر كهرباء",
+    "status": "match",
+    "confidence": 85,
+    "top_code": "2294",
+    "top_name": "قاطع تيار",
+    "top3": "2294/2265/2157",
+    "expected": "2294"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "سيركت بريكر",
+    "status": "review",
+    "confidence": 74,
+    "top_code": "2294",
+    "top_name": "قاطع تيار",
+    "top3": "2294/2157/2265",
+    "expected": "2294"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "لوحة دي بي توزيع",
+    "status": "none",
+    "confidence": 30,
+    "top_code": "2096",
+    "top_name": "لوحة التوزيع",
+    "top3": "2096/2223/2203",
+    "expected": "2096"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "سويتش بورد كهرباء",
+    "status": "review",
+    "confidence": 75,
+    "top_code": "2084",
+    "top_name": "لوحة المفاتيح",
+    "top3": "2084/2113/2225",
+    "expected": "2084"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "لوحة فاير الارم",
+    "status": "match",
+    "confidence": 100,
+    "top_code": "2223",
+    "top_name": "لوحة تحكم إنذار الحريق",
+    "top3": "2223/2127/2283",
+    "expected": "2223"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "طفاية بودرة حريق",
+    "status": "review",
+    "confidence": 71,
+    "top_code": "2283",
+    "top_name": "طفاية حريق",
+    "top3": "2283/2282/2127",
+    "expected": "2283"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "محبس كورة",
+    "status": "review",
+    "confidence": 64,
+    "top_code": "2119",
+    "top_name": "الصمامات الكروية",
+    "top3": "2119/1267/1268",
+    "expected": "2119"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "صمام كروي للمياه",
+    "status": "review",
+    "confidence": 79,
+    "top_code": "2119",
+    "top_name": "الصمامات الكروية",
+    "top3": "2119/1204/1203",
+    "expected": "2119"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "محبس بوابة",
+    "status": "match",
+    "confidence": 92,
+    "top_code": "2118",
+    "top_name": "الصمامات البوابية",
+    "top3": "2118/2061/2037",
+    "expected": "2118"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "شيك فالف",
+    "status": "review",
+    "confidence": 100,
+    "top_code": "2120",
+    "top_name": "صمامات عدم رجوع",
+    "top3": "2120/2238/2121",
+    "expected": "2120"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "صمام عدم رجوع",
+    "status": "match",
+    "confidence": 100,
+    "top_code": "2120",
+    "top_name": "صمامات عدم رجوع",
+    "top3": "2120/2238/0001",
+    "expected": "2120"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "باترفلاي فالف",
+    "status": "match",
+    "confidence": 100,
+    "top_code": "2122",
+    "top_name": "صمامات فراشية",
+    "top3": "2122/2061/2121",
+    "expected": "2122"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "صمام فراشة",
+    "status": "match",
+    "confidence": 96,
+    "top_code": "2122",
+    "top_name": "صمامات فراشية",
+    "top3": "2122/2061/3012",
+    "expected": "2122"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "نيدل فالف",
+    "status": "review",
+    "confidence": 100,
+    "top_code": "2370",
+    "top_name": "صمام إبري",
+    "top3": "2370/1234/2371",
+    "expected": "2370"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "دكت تكييف",
+    "status": "match",
+    "confidence": 96,
+    "top_code": "2079",
+    "top_name": "قنوات التدفئة والتهوية وتكييف الهواء وبطاناتها",
+    "top3": "2079/2075/2217",
+    "expected": "2079"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "دكتات HVAC",
+    "status": "match",
+    "confidence": 97,
+    "top_code": "2079",
+    "top_name": "قنوات التدفئة والتهوية وتكييف الهواء وبطاناتها",
+    "top3": "2079/2075/2217",
+    "expected": "2079"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "عازل دكت تكييف",
+    "status": "review",
+    "confidence": 100,
+    "top_code": "2075",
+    "top_name": "عزل قنوات التكييف: العزل لقنوات التكييف و التهوية",
+    "top3": "2075/2145/2079",
+    "expected": "2075"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "عازل مواسير تكييف",
+    "status": "match",
+    "confidence": 93,
+    "top_code": "2076",
+    "top_name": "عزل أنابيب التكييف و التهوية: العزل لأنابيب التكييف و التهوية",
+    "top3": "2076/2059/2027",
+    "expected": "2076"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "مكيف سبليت",
+    "status": "match",
+    "confidence": 100,
+    "top_code": "2078",
+    "top_name": "مكيفات نظام سبليت",
+    "top3": "2078/1211/1154",
+    "expected": "2078"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "سبلت يونت",
+    "status": "match",
+    "confidence": 100,
+    "top_code": "2078",
+    "top_name": "مكيفات نظام سبليت",
+    "top3": "2078/1211/1154",
+    "expected": "2078"
+  },
+  {
+    "outcome": "TOP3_ONLY",
+    "query": "مكيف باكدج مركزي",
+    "status": "review",
+    "confidence": 83,
+    "top_code": "2068",
+    "top_name": "وحدات مناولة الهواء الخارجية، والمحطات المركزية",
+    "top3": "2068/2071/2304",
+    "expected": "2071"
+  },
+  {
+    "outcome": "TOP3_ONLY",
+    "query": "AHU مركزي",
+    "status": "review",
+    "confidence": 86,
+    "top_code": "2068",
+    "top_name": "وحدات مناولة الهواء الخارجية، والمحطات المركزية",
+    "top3": "2068/2069/2361",
+    "expected": "2069"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "مبرد صحراوي",
+    "status": "none",
+    "confidence": 37,
+    "top_code": "2187",
+    "top_name": "مكيف الصحراوي",
+    "top3": "2187/2241/2229",
+    "expected": "2187"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "زجاج سيكوريت",
+    "status": "match",
+    "confidence": 100,
+    "top_code": "2186",
+    "top_name": "الزجاج المقوى بالحرارة",
+    "top3": "2186/2142/2143",
+    "expected": "2186"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "زجاج دبل عازل",
+    "status": "review",
+    "confidence": 62,
+    "top_code": "2143",
+    "top_name": "زجاج عازل",
+    "top3": "2143/2027/2025",
+    "expected": "2143"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "فلوت جلاس",
+    "status": "match",
+    "confidence": 100,
+    "top_code": "2142",
+    "top_name": "الزجاج العائم",
+    "top3": "2142/2286/2314",
+    "expected": "2142"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "سيراميك أرضيات",
+    "status": "review",
+    "confidence": 57,
+    "top_code": "2353",
+    "top_name": "بلاط سيراميك",
+    "top3": "2353/2348/2277",
+    "expected": "2353"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "بورسلان أرضيات",
+    "status": "none",
+    "confidence": 40,
+    "top_code": "2354",
+    "top_name": "بلاط بورسلان",
+    "top3": "2354/2348/2277",
+    "expected": "2354"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "اسمنت ابيض تشطيب",
+    "status": "review",
+    "confidence": 58,
+    "top_code": "2123",
+    "top_name": "الاسمنت الابيض",
+    "top3": "2123/2049/2022",
+    "expected": "2123"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "بوية جدران",
+    "status": "none",
+    "confidence": 51,
+    "top_code": "2048",
+    "top_name": "الدهانات: مواد الدهان",
+    "top3": "2048/3109/6052",
+    "expected": "2048"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "بوية سيارات",
+    "status": "match",
+    "confidence": 96,
+    "top_code": "3109",
+    "top_name": "دهان سيارات",
+    "top3": "3109/2048/6052",
+    "expected": "3109"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "تنر بوية",
+    "status": "match",
+    "confidence": 100,
+    "top_code": "6020",
+    "top_name": "مذيب دهان",
+    "top3": "6020/6071/6073",
+    "expected": "6020"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "منظف كنب وسجاد",
+    "status": "none",
+    "confidence": 51,
+    "top_code": "3004",
+    "top_name": "منظفات السجاد أو المفروشات",
+    "top3": "3004/3009/3002",
+    "expected": "3004"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "منظف حمامات",
+    "status": "match",
+    "confidence": 100,
+    "top_code": "3009",
+    "top_name": "منظفات المراحيض",
+    "top3": "3009/2538/2609",
+    "expected": "3009"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "منظف قزاز الشبابيك",
+    "status": "match",
+    "confidence": 100,
+    "top_code": "3002",
+    "top_name": "منظفات زجاج أو نوافذ",
+    "top3": "3002/2036/2035",
+    "expected": "3002"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "منظف متعدد الاستخدام",
+    "status": "review",
+    "confidence": 64,
+    "top_code": "3010",
+    "top_name": "منظفات للأغراض عامة",
+    "top3": "3010/3009/3002",
+    "expected": "3010"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "رول ورق حراري للكاشير",
+    "status": "none",
+    "confidence": 31,
+    "top_code": "2612",
+    "top_name": "ورق حراري",
+    "top3": "2612/2606/2029",
+    "expected": "2612"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "ورق طباعة كمبيوتر",
+    "status": "none",
+    "confidence": 32,
+    "top_code": "3203",
+    "top_name": "ورق للطباعة بالكمبيوتر",
+    "top3": "3203/2607/4007",
+    "expected": "3203"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "تونر طابعة ليزر",
+    "status": "none",
+    "confidence": 12,
+    "top_code": "3210",
+    "top_name": "حبر طابعة أو فاكس",
+    "top3": "3210/0001/0002",
+    "expected": "3210"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "تانكي موية شرب",
+    "status": "match",
+    "confidence": 100,
+    "top_code": "2067",
+    "top_name": "خزانات تخزين مياه الشرب للمرافق",
+    "top3": "2067/2103/3103",
+    "expected": "2067"
+  },
+  {
+    "outcome": "TOP_OK",
+    "query": "خزان مياه للمرفق",
+    "status": "review",
+    "confidence": 61,
+    "top_code": "2103",
+    "top_name": "خزانات تخزين مياه المرافق",
+    "top3": "2103/2101/3103",
+    "expected": "2103"
+  },
+  {
+    "outcome": "CONSERVATIVE",
+    "query": "لابتوب للموظفين",
+    "status": "none",
+    "confidence": 0,
+    "top_code": "0001",
+    "top_name": "املوديبين",
+    "top3": "0001/0002/0003",
+    "expected": ""
+  },
+  {
+    "outcome": "CONSERVATIVE",
+    "query": "طابعة ليزر مكتبية",
+    "status": "none",
+    "confidence": 23,
+    "top_code": "3210",
+    "top_name": "حبر طابعة أو فاكس",
+    "top3": "3210/2709/0001",
+    "expected": ""
+  },
+  {
+    "outcome": "CONSERVATIVE",
+    "query": "ثلاجة مكتب صغيرة",
+    "status": "none",
+    "confidence": 14,
+    "top_code": "2550",
+    "top_name": "ثلاجات منزلية",
+    "top3": "2550/2343/2185",
+    "expected": ""
+  },
+  {
+    "outcome": "CONSERVATIVE",
+    "query": "فلتر زيت للمولد",
+    "status": "none",
+    "confidence": 12,
+    "top_code": "6053",
+    "top_name": "زيت للقص",
+    "top3": "6053/6019/6017",
+    "expected": ""
+  },
+  {
+    "outcome": "CONSERVATIVE",
+    "query": "مضخة وقود ديزل",
+    "status": "none",
+    "confidence": 21,
+    "top_code": "2152",
+    "top_name": "مولدات الديزل",
+    "top3": "2152/2334/2383",
+    "expected": ""
+  }
+]
