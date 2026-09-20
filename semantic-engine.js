@@ -1,7 +1,7 @@
 (function(global){
 'use strict';
 
-const VERSION='0.6.0-semantic-rescue';
+const VERSION='0.7.0-golden-blind';
 const CACHE=new WeakMap();
 const PRETRAINED_CACHE=new WeakMap();
 let EMBEDDING_BACKEND=null;
@@ -108,10 +108,12 @@ function conceptAnalysis(text){
 function concepts(text){return conceptAnalysis(text).positive;}
 function negatedConcepts(text){return conceptAnalysis(text).negated;}
 function jaccard(a,b){ if(!a.size&&!b.size)return 0; let hit=0; for(const x of a)if(b.has(x))hit++; return hit/(a.size+b.size-hit||1); }
-function cosineSparse(a,b){
-  let dot=0,aa=0,bb=0; for(const v of a.values())aa+=v*v; for(const v of b.values())bb+=v*v;
-  const small=a.size<b.size?a:b,large=a.size<b.size?b:a; for(const [k,v] of small){const z=large.get(k);if(z)dot+=v*z;}
-  return aa&&bb?dot/Math.sqrt(aa*bb):0;
+function sparseNorm(a){let z=0;for(const v of a.values())z+=v*v;return Math.sqrt(z)||1;}
+function cosineSparse(a,b,an,bn){
+  const small=a.size<b.size?a:b,large=a.size<b.size?b:a; let dot=0;
+  for(const [k,v] of small){const z=large.get(k);if(z)dot+=v*z;}
+  const na=an||sparseNorm(a), nb=bn||sparseNorm(b);
+  return na&&nb?dot/(na*nb):0;
 }
 function add(m,k,v){m.set(k,(m.get(k)||0)+v);}
 function build(list){
@@ -132,21 +134,46 @@ function build(list){
     const uniq=[...new Set(d.ws)].filter(w=>(idf.get(w)||0)>=1.4).slice(0,90);
     for(const a of uniq){let m=neigh.get(a);if(!m)neigh.set(a,m=new Map()); for(const b of uniq)if(a!==b)add(m,b,(idf.get(b)||1));}
   }
+  const neighTop=new Map();
+  for(const [w,n] of neigh){const top=[...n.entries()].sort((a,b)=>b[1]-a[1]).slice(0,24);if(top.length)neighTop.set(w,top);}
   function vectorForWords(ws){
     const v=new Map();
     for(const w of ws){
       add(v,'w:'+w,(idf.get(w)||1.5)*1.4);
-      const n=neigh.get(w); if(n){const top=[...n.entries()].sort((a,b)=>b[1]-a[1]).slice(0,24); const max=top[0]?.[1]||1; for(const [k,z] of top)add(v,'n:'+k,0.42*(z/max));}
+      const top=neighTop.get(w); if(top){const max=top[0]?.[1]||1; for(const [k,z] of top)add(v,'n:'+k,0.42*(z/max));}
     }
     return v;
   }
-  for(const d of docs){
+  const tokenPostings=new Map(), conceptPostings=new Map(), codeToIndex=new Map();
+  for(let i=0;i<docs.length;i++){
+    const d=docs[i];
     const name=words([d.r.ar,d.r.en].join(' ')); const desc=words(d.r.description||'');
     d.vector=vectorForWords(name.concat(desc.slice(0,80)));
+    d.vectorNorm=sparseNorm(d.vector);d.wordSet=new Set(d.ws);
+    codeToIndex.set(String(d.r.code),i);
+    for(const w of new Set(d.ws)){let a=tokenPostings.get(w);if(!a)tokenPostings.set(w,a=[]);a.push(i);}
+    for(const c of d.concepts){let a=conceptPostings.get(c);if(!a)conceptPostings.set(c,a=[]);a.push(i);}
   }
-  return {docs,idf,neigh,vectorForWords,aliasAr,aliasEn};
+  return {docs,idf,neigh,neighTop,vectorForWords,aliasAr,aliasEn,tokenPostings,conceptPostings,codeToIndex};
 }
 function getIndex(list){let x=CACHE.get(list);if(!x){x=build(list);CACHE.set(list,x);}return x;}
+
+function candidateDocs(index,prepared,legacy,limit=420){
+  const score=new Map();
+  const bump=(i,v)=>score.set(i,(score.get(i)||0)+v);
+  for(const w of new Set(prepared.qw||[])){
+    const idf=index.idf.get(w)||1.5;
+    const direct=index.tokenPostings.get(w);if(direct)for(const i of direct)bump(i,3.0*idf);
+    const top=index.neighTop.get(w);if(top){
+      const max=top[0]?.[1]||1;
+      for(const [nw,z] of top.slice(0,16)){const a=index.tokenPostings.get(nw);if(a)for(const i of a)bump(i,0.38*idf*(z/max));}
+    }
+  }
+  for(const c of prepared.qc||[]){const a=index.conceptPostings.get(c);if(a)for(const i of a)bump(i,2.6);}
+  for(const x of legacy.candidates||[]){const i=index.codeToIndex.get(String(x.code));if(i!==undefined)bump(i,5.0*(x.score||0.25));}
+  const ids=[...score.entries()].sort((a,b)=>b[1]-a[1]||a[0]-b[0]).slice(0,limit).map(x=>x[0]);
+  return ids.length?ids.map(i=>index.docs[i]):index.docs.slice(0,Math.min(limit,index.docs.length));
+}
 
 function conflictPenalty(qc,rc,r,qneg,domainConcepts){
   let p=0; const why=[];
@@ -172,9 +199,9 @@ function conflictPenalty(qc,rc,r,qneg,domainConcepts){
 function scoreRecord(query,d,index,legacyByCode,prepared){
   const q=prepared||{qw:words(query),qc:concepts(query),qneg:negatedConcepts(query)}; if(!q.qv)q.qv=index.vectorForWords(q.qw);
   const qw=q.qw, qc=q.qc, qneg=q.qneg||new Set(), qv=q.qv;
-  const direct=new Set(qw), rw=new Set(d.ws); let lexical=0,den=0;
+  const direct=new Set(qw), rw=d.wordSet||new Set(d.ws); let lexical=0,den=0;
   for(const w of direct){const wt=index.idf.get(w)||1.6;den+=wt;if(rw.has(w))lexical+=wt;} lexical=den?lexical/den:0;
-  const semantic=cosineSparse(qv,d.vector);
+  const semantic=cosineSparse(qv,d.vector,q.qvNorm||(q.qvNorm=sparseNorm(qv)),d.vectorNorm);
   const concept=jaccard(qc,d.concepts);
   let conceptRecall=0;if(qc.size){let hit=0;for(const c of qc)if(d.concepts.has(c))hit++;conceptRecall=hit/qc.size;}
   const nameConcept=jaccard(qc,d.nameConcepts);
@@ -200,13 +227,17 @@ function aliasExact(query,index,topN){
   const out=rows.slice(0,Math.max(1,topN||5));
   return {status:'match',confidence:1,margin:1,ambiguous:rows.length>1,codeAmbiguous:rows.length>1,query,engine:'semantic-hybrid',semanticUsed:false,semanticGuard:'alias-exact',candidates:out.map(r=>({code:r.code,ar:r.ar,en:r.en,sector:r.sector||'',description:r.description||'',requirements:r.requirements||'',applicationDate:r.applicationDate||'',notes:r.notes||'',score:1,reasons:['مطابقة مباشرة بعد توحيد الفواصل في الاسم الرسمي'],conflicts:[],metrics:{exact:true,aliasExact:true}}))};
 }
-function legacyGuardReason(legacy,qc,qneg){
+function legacyGuardReason(legacy,qc,qneg,qw){
   if(legacy.confidence===1&&legacy.candidates?.length)return 'exact-legacy-match';
   // Strong lexical/domain evidence remains authoritative even when the wording contains a negator
   // (for example official surgical/non-surgical product distinctions).
   if(legacy.status==='match'&&legacy.confidence>=0.80)return 'strong-legacy-match';
   if(legacy.candidates?.length&&legacy.confidence>=0.68)return 'strong-legacy-candidate';
   if(qneg&&qneg.size)return null;
+  // Long descriptive requests carry enough context for sparse semantic/description rescue,
+  // even when the small ontology only recognizes one concept (or a non-rescue concept).
+  // Auto-match remains separately gated below, so this broadens retrieval without broadening approval.
+  if(qw&&qw.length>=7)return null;
   if(!qc.size)return 'no-semantic-concepts';
   let rescue=0; for(const c of qc)if(RESCUE_CONCEPTS.has(c))rescue++;
   if(rescue<2)return 'outside-local-rescue-domain';
@@ -221,11 +252,13 @@ function match(query,list,opts={}){
   const alias=aliasExact(query,index,topN);if(alias)return alias;
   const legacy=global.MandatoryMatcher?global.MandatoryMatcher.match(query,list,{topN:Math.max(12,topN)}):{status:'none',confidence:0,candidates:[]};
   const analysis=conceptAnalysis(query),qc=analysis.positive,qneg=analysis.negated;
-  const guard=legacyGuardReason(legacy,qc,qneg);
+  const qwords=words(query);
+  const guard=legacyGuardReason(legacy,qc,qneg,qwords);
   if(guard)return guardedLegacy(legacy,guard,topN);
   const legacyByCode=new Map((legacy.candidates||[]).map(c=>[String(c.code),c.score]));
-  const prepared={qw:words(query),qc,qneg}; prepared.qv=index.vectorForWords(prepared.qw);
-  const ranked=index.docs.map(d=>scoreRecord(query,d,index,legacyByCode,prepared)).sort((a,b)=>b.score-a.score||String(a.r.code).localeCompare(String(b.r.code)));
+  const prepared={qw:qwords,qc,qneg}; prepared.qv=index.vectorForWords(prepared.qw);
+  const pool=candidateDocs(index,prepared,legacy);
+  const ranked=pool.map(d=>scoreRecord(query,d,index,legacyByCode,prepared)).sort((a,b)=>b.score-a.score||String(a.r.code).localeCompare(String(b.r.code)));
   const first=ranked[0],second=ranked[1]; if(!first)return {status:'none',confidence:0,margin:0,query,candidates:[],engine:'semantic-hybrid'};
   const margin=first.score-(second?.score||0);
   let status='none';
