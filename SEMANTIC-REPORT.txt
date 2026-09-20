@@ -1,0 +1,22 @@
+Mandatory List Matcher v0.4 — semantic validation
+
+Legacy regression:
+PASS 7,031 / FAIL 0
+
+New semantic acceptance:
+PASS 11 / FAIL 0
+
+Key observed cases:
+- سترة واقية -> REVIEW, top: 2510 سترات سلامة; alternatives include 2516 and 2514
+- بدلة عازلة للمواد الكيميائية -> REVIEW, top: 2514 ملابس واقية من المواد الخطرة
+- حذاء يحمي القدم من الصدمات -> REVIEW, top: 2511 أحذية سلامة
+- غطاء للرأس للحماية من السقوط -> MATCH, top: 2502 خوذات سلامة
+- زي مقاوم للحريق -> MATCH, top: 2515 ملابس مثبطة للنيران
+- سترة عاكسة لعمال الطرق -> MATCH, top: 2510 سترات سلامة
+- سترة شتوية عادية -> NONE (safety result is not auto-accepted)
+
+Official Arabic-name preservation:
+1,749 / 1,749 correct code remains retrievable as match.
+
+Network behavior of new engine:
+No fetch / XMLHttpRequest / WebSocket / EventSource / CDN / API call is present in semantic-engine.js.

@@ -1,0 +1,30 @@
+{
+  "model": "NAMAA-Space/zarra_int8",
+  "runtime": "Model2Vec local/WASM from_bytes",
+  "dimension": 256,
+  "precision": "int8",
+  "runtime_network_access": false,
+  "required_files": [
+    {
+      "name": "model.safetensors",
+      "size_display": "64 MB",
+      "sha256": "e7ddf3a47443d21c3faa70ceea5c03d07b3d935f04643d24a4fd6867ba7eede5"
+    },
+    {
+      "name": "tokenizer.json",
+      "size_display": "17.1 MB",
+      "sha256": "e50d57f2617dfe4425aa46562197e4953b6f10875ed63c32f1859a91fa544170"
+    },
+    {
+      "name": "config.json",
+      "size_display": "286 Bytes"
+    }
+  ],
+  "config_contract": {
+    "model_type": "model2vec",
+    "tokenizer_name": "jinaai/jina-embeddings-v3",
+    "apply_pca": 256,
+    "hidden_dim": 256,
+    "normalize": true
+  }
+}
