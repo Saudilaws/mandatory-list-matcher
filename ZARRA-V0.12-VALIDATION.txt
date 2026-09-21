@@ -1,0 +1,20 @@
+Zarra local integration v0.12 validation
+Date: 2026-09-21
+
+Changes:
+- Removed MARFA-specific Arabic character folding from the Model2Vec tokenizer path; runtime now preserves Arabic distinctions and applies Unicode NFKC only before Unigram segmentation.
+- Kept local/offline model assets unchanged.
+- Changed semantic fusion to safety-first retrieval-only mode: deterministic matcher owns Top-1; Zarra enriches alternatives and cannot demote the established Top-1 candidate.
+- Added live-model regression test using the actual 64 MB INT8 safetensors + tokenizer + config.
+
+Live-model acceptance:
+HOLDOUT:       baseline 45/45, Zarra fusion 45/45, regressions 0
+FINAL HOLDOUT: baseline 23/23, Zarra fusion 23/23, regressions 0
+UNSEEN FINAL:  baseline 22/22, Zarra fusion 22/22, regressions 0
+Combined:      baseline 90/90, Zarra fusion 90/90, regressions 0
+
+Existing matcher gate: PASS=7031 FAIL=0 TOTAL=7031
+Pretrained adapter contract: PASS=10 FAIL=0
+
+Important limitation:
+This package does NOT claim byte-for-byte/token-for-token parity with the official Python Model2Vec implementation. The model is standard embeddings-only I8 format and mean-pooling is appropriate for that format, but tokenizer.json contains a Precompiled normalizer. The browser runtime currently approximates that normalizer with NFKC. Until an independent official-runtime parity oracle is available, Zarra remains retrieval-only by design.

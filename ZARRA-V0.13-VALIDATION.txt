@@ -1,0 +1,24 @@
+Zarra local integration v0.13 validation — 2026-09-21
+
+Change in this pass
+- Corrected Model2Vec inference contract to exclude the tokenizer UNK id from mean pooling.
+- This matches independent Model2Vec-compatible implementation documentation stating that [UNK] is filtered before mean pooling and L2 normalization.
+- Added test-model2vec-runtime-contract.js.
+- Kept Zarra in retrieval-only mode; it cannot demote deterministic Top-1 until tokenizer parity is independently proven.
+
+Runtime contract
+- 256 dimensions: PASS
+- known-vector L2 normalization: PASS
+- unknown-only input -> zero vector: PASS
+- Arabic semantic sanity: PASS (air-filter paraphrase cosine 0.1842 vs unrelated DC cable 0.0390)
+
+Acceptance gates
+- HOLDOUT: 45/45, regressions 0
+- FINAL HOLDOUT: 23/23, regressions 0
+- UNSEEN FINAL: 22/22, regressions 0
+- Combined: 90/90, regressions 0
+- PRETRAINED CONTRACT: 10/10
+- Main matcher gate: 7031/7031
+
+Important limitation
+The tokenizer contains a Hugging Face/SentencePiece Precompiled normalizer. The current browser runtime still uses NFKC rather than executing that binary charsmap. Therefore official tokenizer/vector parity is NOT claimed. This is why Zarra remains retrieval-only.

@@ -1,0 +1,37 @@
+ZARRA v0.18 — HARD-NEGATIVE STRESS PASS
+Date: 2026-09-21
+
+Purpose
+- Stress neighbouring mandatory-list concepts with deliberately confusable wording.
+- Add explicit discriminators only where the query itself contains a strong distinguishing attribute.
+- Keep the deterministic safety anchor for ambiguous cases.
+
+Changes
+- Added battery chemistry discriminators: lead-acid, nickel-cadmium/NiCd, mercury oxide, vehicle battery.
+- Added LV/MV cable-accessory discrimination, including the source-list spelling "Meduim Voltage".
+- Added valve hard negatives: needle, block-and-bleed, swing-check.
+- Added pump-part hard negatives: impeller, shaft, barrel/body, submersible spares, centrifugal spares.
+- Expanded heat-detector wording to heat sensor / Arabic حساس حرارة.
+- Added a narrow explicit-domain override gate. It can bypass the legacy anchor only when a specific discriminator is present in both query and candidate and the candidate has sufficient hybrid support. Generic Zarra similarity still cannot override Top-1.
+
+Hard-negative suite
+- 66 deliberately confusable queries across transformers, battery chemistries, cable accessories, valves, pump parts, filters, and fire detection.
+- Result: 65/66 Top-1.
+- Remaining unresolved case: "needle control valve". The legacy list contains medical administration-set text with both "needle" and "control valve" and scores it as an exact-looking lexical match. The safety gate intentionally does not force an override because the wording is genuinely collision-prone in this dataset. Needle valve remains present as a high-scoring alternative.
+
+Regression gates
+- Core matcher: 7031/7031 PASS.
+- Pretrained/Zarra contract: 10/10 PASS.
+- Holdout: 45/45 positive Top-1; badAuto 0/5 negatives.
+- Final Holdout: 23/23 positive Top-1; badAuto 0/5 negatives.
+- Unseen Final: 22/22 positive Top-1; badAuto 0/5 negatives.
+- HVAC discriminator suite: 7/7 PASS.
+- Multi-domain discriminator suite: 31/31 PASS.
+- Model2Vec runtime contract: 4/4 PASS.
+- Precompiled normalizer contract: 2/2 PASS.
+- Adversarial corpus: 0 regressions; Zarra raw Recall@10 65/65.
+
+Safety conclusion
+- Zarra remains retrieval-first, not an unconstrained final judge.
+- v0.18 introduces only narrow, explainable domain overrides for explicit hard-negative attributes.
+- Ambiguous collisions remain review/legacy anchored rather than being force-corrected.

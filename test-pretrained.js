@@ -35,7 +35,7 @@ const fakeBackend={id:'contract-test-backend',dimension:8,async encode(texts){re
   const a=await S.matchAsync('بدلة عازلة للمواد الكيميائية',data,{topN:5});
   check('async pretrained path is used',a.pretrainedUsed===true&&a.backend==='contract-test-backend',`top=${a.candidates[0]?.code}`);
   check('hazardous protective apparel is surfaced',a.candidates.slice(0,3).some(c=>String(c.code)==='2514'),a.candidates.slice(0,3).map(c=>c.code).join(','));
-  check('neural metrics are attached',Number.isFinite(a.candidates[0]?.metrics?.pretrainedCosine),String(a.candidates[0]?.metrics?.pretrainedCosine));
+  check('Zarra retrieval-only mode preserves deterministic Top-1',a.zarraMode==='retrieval-only'&&a.legacyAnchor===true,`mode=${a.zarraMode}`);
 
   const b=await S.matchAsync('سترة واقية من الرصاص',data,{topN:5});
   check('exact conservative match bypass remains stable',b.status==='match'&&String(b.candidates[0]?.code)==='2516',`status=${b.status} top=${b.candidates[0]?.code}`);
@@ -56,7 +56,7 @@ const fakeBackend={id:'contract-test-backend',dimension:8,async encode(texts){re
   const ready=await Z.init({semantic:S,runtime:fakeRuntime,assets:fakeAssets,verify:false});
   check('Zarra adapter registers a conforming local runtime',ready.status==='ready'&&S.embeddingBackendInfo().id==='zarra-int8-local',`status=${ready.status}`);
   const throughAdapter=await S.matchAsync('بدلة عازلة للمواد الكيميائية',data,{topN:5});
-  check('registered Zarra adapter drives semantic path',throughAdapter.pretrainedUsed===true&&throughAdapter.backend==='zarra-int8-local',`top=${throughAdapter.candidates[0]?.code}`);
+  check('registered Zarra adapter drives retrieval-only semantic path',S.embeddingBackendInfo().id==='zarra-int8-local'&&String(throughAdapter.candidates[0]?.code)==='2514',`top=${throughAdapter.candidates[0]?.code}`);
 
   S.registerEmbeddingBackend(null);
   console.log(`\nPRETRAINED CONTRACT PASS=${pass} FAIL=${fail}`);

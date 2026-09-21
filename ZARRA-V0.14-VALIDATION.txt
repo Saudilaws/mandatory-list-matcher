@@ -1,0 +1,20 @@
+ZARRA v0.14 validation — 2026-09-21
+
+Changes
+- Replaced the NFKC approximation in the local Model2Vec runtime with a direct interpreter for tokenizer.json Precompiled SentencePiece charsmap.
+- The interpreter reads the embedded double-array trie and replacement table locally; no API/CDN/network dependency was added.
+- Unknown token exclusion from v0.13 is retained.
+- Zarra remains retrieval-only: it cannot displace the baseline Top-1 result yet.
+
+New normalization probes
+- Circled digit: "① فلتر" and "1 فلتر" => effectively identical vectors (cosine ~1.0).
+- Arabic presentation form: "ﻻ" and "لا" => effectively identical vectors (cosine ~1.0).
+
+Regression gates
+- test-model2vec-runtime-contract.js: 4/4 pass.
+- test-zarra-live.js: 90/90 Top-1 retained, 0 regressions.
+- test-matcher.js: 7031/7031 pass.
+
+Important limitation
+- This substantially closes the known Precompiled-normalizer gap for normal byte-stream inputs, but it is not yet an independent bit-for-bit parity proof against the official Model2Vec implementation across an adversarial Unicode corpus.
+- Zarra therefore remains retrieval-only pending an external-reference parity oracle or an official local WASM build.

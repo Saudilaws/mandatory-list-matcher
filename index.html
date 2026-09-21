@@ -41,7 +41,7 @@
   <button class="secondary" id="reset" style="margin-top:10px">العودة للقائمة المضمنة</button>
 </aside>
 </div></main>
-<script src="mandatory-data.js"></script><script src="mandatory-matcher.js"></script><script src="semantic-engine.js"></script><script src="zarra-local-backend.js"></script>
+<script src="mandatory-data.js"></script><script src="mandatory-matcher.js"></script><script src="semantic-engine.js"></script><script src="model2vec-local-runtime.js"></script><script src="zarra-assets-loader.js"></script><script src="zarra-local-backend.js"></script>
 <script>
 let data=[...window.MANDATORY_LIST], batchRows=[];
 const $=id=>document.getElementById(id);
@@ -59,6 +59,6 @@ $('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const ro
 $('reset').onclick=()=>{data=[...window.MANDATORY_LIST];refresh();$('result').innerHTML='';};
 $('batchCheck').onclick=async()=>{const lines=$('batch').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);if(!lines.length)return;const b=$('batchCheck'),old=b.textContent;b.disabled=true;b.textContent='جاري الفهم…';$('batchResult').innerHTML='<div class="muted">يتم تحليل البنود دلاليًا…</div>';try{batchRows=[];for(const q of lines)batchRows.push(await MandatorySemanticMatcher.matchAsync(q,data,{topN:5}));$('exportCsv').disabled=false;const label=r=>statusLabel(r)[0];$('batchResult').innerHTML=`<table style="width:100%;border-collapse:collapse;min-width:760px"><thead><tr><th style="text-align:right;padding:8px;border-bottom:1px solid #ddd">البند</th><th>الحالة</th><th>أفضل مرشح</th><th>الرمز</th><th>الثقة</th></tr></thead><tbody>${batchRows.map(r=>{const c=r.candidates[0]||{};return `<tr><td style="padding:8px;border-bottom:1px solid #eee">${esc(r.query)}</td><td>${esc(label(r))}</td><td>${esc(c.ar||'—')}</td><td>${esc(c.code||'—')}</td><td>${Math.round((r.confidence||0)*100)}%</td></tr>`}).join('')}</tbody></table>`;}finally{b.disabled=false;b.textContent=old;}};
 $('exportCsv').onclick=()=>{if(!batchRows.length)return;const csvSafe=s=>{const v=String(s??'');return /^[=+\-@\t\r]/.test(v)?"'"+v:v;};const q=s=>'"'+csvSafe(s).replace(/"/g,'""')+'"';const rows=[['البند','الحالة','أفضل مرشح','الاسم الإنجليزي','الرمز','الثقة','القطاع'],...batchRows.map(r=>{const c=r.candidates[0]||{};return[r.query,statusLabel(r)[0],c.ar||'',c.en||'',c.code||'',Math.round((r.confidence||0)*100)+'%',c.sector||''];})];const blob=new Blob(['\ufeff'+rows.map(r=>r.map(q).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mandatory-list-match-results.csv';a.click();URL.revokeObjectURL(a.href);};
-async function initLocalSemanticModel(){const el=$('modelStatus');try{const state=await MandatoryZarra.init();if(state.status==='ready')el.textContent='Zarra INT8 محلي';else el.textContent='محلي هجين (Zarra غير محمّل)';}catch(_){el.textContent='محلي هجين';}}
+async function initLocalSemanticModel(){const el=$('modelStatus');try{await MarfaZarraAssets.load();const state=await MandatoryZarra.init();if(state.status==='ready')el.textContent='Zarra INT8 محلي';else el.textContent='محلي هجين (Zarra غير محمّل)';}catch(_){el.textContent='محلي هجين';}}
 refresh();initLocalSemanticModel();
 </script></body></html>

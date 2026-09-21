@@ -25,4 +25,4 @@
 
 ## ملاحظة تحقق
 
-الـbackend الحقيقي لـ Zarra غير مضمن في هذه الحزمة لأن ملفات النموذج الثنائية وruntime WASM غير موجودة في المشروع المرفوع. لا تدّعي هذه النسخة أن دقة Zarra الفعلية اختُبرت. راجع `ZARRA-INTEGRATION-STATUS.md`.
+هذه الحزمة تتضمن ملفات Zarra المحلية (`model.safetensors`, `tokenizer.json`, `config.json`) وruntime JavaScript محلي. يبقى Zarra في وضع retrieval-only إلى أن يثبت اختبار مستقل التطابق مع Precompiled normalizer المرجعي. راجع `ZARRA-V0.13-VALIDATION.txt`.

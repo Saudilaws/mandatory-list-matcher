@@ -1,0 +1,14 @@
+{
+  "total": 65,
+  "baseTop1": 63,
+  "zarraRawTop1": 39,
+  "zarraRawTop3": 49,
+  "zarraRawTop5": 52,
+  "zarraRawTop10": 65,
+  "baseMisses": 2,
+  "rescuedTop3": 1,
+  "rescuedTop10": 2,
+  "regressions": 0
+}
+BASE_MISS {"query":"مكيف باكدج مركزي","expected":"2071","base":"2068","zarraRawTop10":"2187/2071/2078/2081/2166/2361/2181/2068/3113/2304"}
+BASE_MISS {"query":"AHU مركزي","expected":"2069","base":"2068","zarraRawTop10":"1327/3024/1188/2181/2361/2069/2068/2239/2304/2122"}

@@ -1,0 +1,14 @@
+Zarra v0.15 validation
+- Safety gate: Zarra remains retrieval-only; deterministic Top-1 ownership unchanged.
+- Baseline semantic gates: HOLDOUT 45/45, FINAL 23/23, UNSEEN 22/22, 0 badAuto.
+- Runtime contract: 4/4.
+- Adversarial imagination set: 65 labelled paraphrases.
+  baseline Top-1 63/65
+  raw Zarra Top-1 39/65
+  raw Zarra Top-3 49/65
+  raw Zarra Top-5 52/65
+  raw Zarra Top-10 65/65
+  baseline misses 2
+  Zarra retrieval rescued 1/2 within Top-3 and 2/2 within Top-10
+  final decision regressions 0
+Conclusion: Zarra is useful as a candidate-recall layer, but the raw embedding rank is not accurate enough to own Top-1. Keep retrieval-only and use deterministic/domain reranking over the enlarged candidate pool.

@@ -44,3 +44,11 @@ The intended production runtime is a local Model2Vec implementation (for example
 ## Verification boundary
 
 The real Zarra model inference has **not** been executed in this build because the 81.1 MB Zarra model assets and a compiled Model2Vec browser runtime are not present in the uploaded project, and this execution environment could not retrieve the Xet-hosted binary assets. The integration code therefore does not claim a Zarra accuracy result yet. Its runtime/fusion/fallback contract is tested; model-quality acceptance must be measured once the pinned local model assets are supplied.
+
+## v0.16 domain-aware reranker
+- Conservative second-stage reranking for explicit HVAC discriminators.
+- Core 7031/7031; pretrained contract 10/10; labelled holdouts 90/90 with zero regressions; domain discriminator suite 7/7.
+- Zarra remains retrieval-only for final Top-1; ambiguous adversarial labels are not used to force unsafe overrides.
+
+## v0.18 hard-negative gate
+See `ZARRA-V0.18-HARD-NEGATIVE.txt` and `test-zarra-hard-negatives.js`. Narrow explicit-domain overrides are enabled only for strongly discriminative attributes; generic Zarra similarity remains retrieval-only.

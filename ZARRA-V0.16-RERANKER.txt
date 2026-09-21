@@ -1,0 +1,20 @@
+ZARRA v0.16 — DOMAIN-AWARE SECOND-STAGE RERANKER
+Date: 2026-09-21
+
+Changes
+- Added domainRerankAdjustment() to pretrained semantic scoring.
+- Only explicit discriminators can alter second-stage score; generic shared cues do not force an override.
+- HVAC cues: outdoor/roof, indoor, modular/additional-capacity, compressor, condenser, contextual Window AC.
+- Zarra remains retrieval-only for final Top-1 pending independent calibration.
+
+Validation
+- Core matcher: 7031/7031 PASS.
+- Pretrained/Zarra contract: 10/10 PASS.
+- Holdout + Final Holdout + Unseen Final: 90/90; 0 regressions.
+- Domain discriminator suite: 7/7 PASS.
+- Adversarial: base 63/65; Zarra raw recall@10 65/65; final regressions 0.
+- Existing official-name retrieval check still reports 25/1749 failures; this is not newly introduced. Prior audit found duplicate official names/codes make part of that assertion structurally invalid.
+
+Ground-truth audit
+- "مكيف باكدج مركزي" is under-specified: code 2068 is officially "Packaged, Outdoor, Central-Station Air-Handling Units" while 2071 is "Packaged Compressor and Condenser Units". Compressor/condenser/window/outdoor cues are needed to disambiguate safely.
+- "AHU مركزي" is under-specified: 2068 is a central-station AHU; 2069 is specifically Modular Indoor Central Station AHU. Indoor/modular cues are needed to force 2069 safely.

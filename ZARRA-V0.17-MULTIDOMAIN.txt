@@ -1,0 +1,22 @@
+ZARRA v0.17 — MULTI-DOMAIN SECOND-STAGE RERANKER
+Date: 2026-09-21
+
+Scope
+- Extended explicit domain-aware second-stage scoring beyond HVAC.
+- Added discriminators for electrical voltage/cable/breaker classes, pumps, valves, pipe materials, filters/automotive service, and fire/safety detection.
+- No generic cue is allowed to grant Zarra final Top-1 authority; final production mode remains retrieval-only.
+
+Validation
+- Core matcher: 7031/7031 PASS.
+- Pretrained/Zarra contract: 10/10 PASS.
+- Holdout: 45/45 positive Top-1; badAuto 0/5 negatives.
+- Final Holdout: 23/23 positive Top-1; badAuto 0/5 negatives.
+- Unseen Final: 22/22 positive Top-1; badAuto 0/5 negatives.
+- HVAC discriminator suite: 7/7 PASS.
+- New multi-domain discriminator suite: 31/31 PASS.
+- Model2Vec runtime contract: 4/4 PASS.
+- Precompiled normalizer contract: 2/2 PASS.
+- Adversarial corpus: deterministic final path retains 0 regressions; Zarra raw recall@10 remains 65/65.
+
+Safety decision
+- Zarra remains retrieval-only. Static embeddings are used to retrieve/expand candidates; deterministic/domain-aware logic remains authoritative for final Top-1 until a larger independent labelled acceptance set proves that automatic neural overrides improve accuracy without false positives.

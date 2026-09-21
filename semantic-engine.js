@@ -1,7 +1,7 @@
 (function(global){
 'use strict';
 
-const VERSION='0.7.0-golden-blind';
+const VERSION='0.7.2-zarra-hard-negative-safe';
 const CACHE=new WeakMap();
 const PRETRAINED_CACHE=new WeakMap();
 let EMBEDDING_BACKEND=null;
@@ -331,6 +331,97 @@ async function ensurePretrainedIndex(list,backend,generation){
   PRETRAINED_CACHE.set(list,{generation,backendId:backend.id,promise});
   try{return await promise;}catch(e){if(PRETRAINED_CACHE.get(list)?.promise===promise)PRETRAINED_CACHE.delete(list);throw e;}
 }
+
+// Domain-aware second-stage reranking. It only reacts to explicit discriminators present in the
+// query and official record text; generic words such as "central" or "packaged" cannot by
+// themselves overturn the conservative matcher because several official HVAC items share them.
+function domainRerankAdjustment(query,r){
+  const q=norm(query), t=norm([r.ar,r.en,r.description,r.requirements,r.sector].filter(Boolean).join(' '));
+  let delta=0; const reasons=[];
+  const cue=(re,label,weight)=>{if(re.test(q)){if(re.test(t)){delta+=weight;reasons.push('تطابق محدد: '+label);}else delta-=weight*0.65;}};
+  // HVAC discriminators that separate neighbouring mandatory-list entries.
+  cue(/(?:^|\s)(?:outdoor|خارجي|خارجيه|خارجية|سطح|اسطح|أسطح)(?:\s|$)/,'خارجي/سطحي',0.085);
+  cue(/(?:^|\s)(?:indoor|داخلي|داخليه|داخلية)(?:\s|$)/,'داخلي',0.085);
+  cue(/(?:^|\s)(?:modular|موديولار|وحدات اضافيه|وحدات إضافية|قابل.*زياد.*قدره)(?:\s|$)/,'Modular',0.105);
+  cue(/(?:^|\s)(?:compressor|كمبروسر|كومبرسور|ضاغط)(?:\s|$)/,'Compressor',0.11);
+  cue(/(?:^|\s)(?:condenser|مكثف)(?:\s|$)/,'Condenser',0.11);
+  if(/(?:^|\s)(?:window|شباك|شباكي|شباكيه|شباكية)(?:\s|$)/.test(q)){const ok=/(?:تكييف|air conditioning|compressor|كمبروسر|كومبرسور|مكثف|condenser)/.test(t);delta+=ok?0.12:-0.078;if(ok)reasons.push('تطابق محدد: Window AC');}
+
+  // Electrical discriminators: voltage class and functional cable/breaker type.
+  cue(/(?:تيار مستمر|dc(?:\s+cable)?|direct current)/,'تيار مستمر',0.12);
+  cue(/(?:جهد عال|جهد عالي|high[ -]?voltage|(?:33|66|110|115|132|220|230|380|400)\s*kv)/,'جهد عالٍ',0.115);
+  cue(/(?:جهد متوسط|medium[ -]?voltage|(?:3[.]3|6[.]6|11|13[.]8|22|33)\s*kv)/,'جهد متوسط',0.105);
+  cue(/(?:جهد منخفض|low[ -]?voltage|\blv\b|(?:220|230|380|400|415|480)\s*v\b)/,'جهد منخفض',0.105);
+  cue(/(?:كابل تحكم|كابلات تحكم|control cable)/,'كابل تحكم',0.12);
+  cue(/(?:قاطع هوائي|air circuit breaker|\bacb\b)/,'قاطع هوائي',0.13);
+  cue(/(?:قاطع مقولب|molded case|moulded case|\bmccb\b)/,'قاطع مقولب',0.13);
+  cue(/(?:قاطع غازي|gas circuit breaker|\bgcb\b)/,'قاطع غازي',0.13);
+
+  // Pumps and valves: explicit service/type cues only.
+  cue(/(?:مضخ(?:ة|ات) مياه|water pumps?)/,'مضخة مياه',0.11);
+  cue(/(?:مضخ(?:ة|ات) صرف|sewage pumps?|wastewater pumps?)/,'مضخة صرف',0.12);
+  cue(/(?:مضخ(?:ة|ات) غاطس|submersible pumps?)/,'مضخة غاطسة',0.12);
+  cue(/(?:مضخ(?:ة|ات) حريق|fire pumps?)/,'مضخة حريق',0.12);
+  cue(/(?:مضخ(?:ة|ات) زيت|oil pumps?)/,'مضخة زيت',0.12);
+  cue(/(?:صمام بواب|gate valves?)/,'صمام بوابي',0.11);
+  cue(/(?:صمام كرو|ball valves?)/,'صمام كروي',0.11);
+  cue(/(?:صمام فراش|butterfly valves?)/,'صمام فراشي',0.11);
+  cue(/(?:صمام عدم رجوع|check valves?|non[ -]?return valves?)/,'صمام عدم رجوع',0.12);
+  cue(/(?:صمام جلوب|globe valves?)/,'صمام جلوب',0.11);
+
+  // Pipes/materials: prevent generic pipe neighbours from beating an explicitly specified material.
+  cue(/(?:hdpe|بولي ايثيلين عالي الكثاف|بولي إيثيلين عالي الكثاف)/,'HDPE',0.11);
+  cue(/(?:pvc|بولي فينيل كلوريد)/,'PVC',0.11);
+  cue(/(?:abs|ستايرين بيوتادايين)/,'ABS',0.11);
+  cue(/(?:ستانلس|stainless steel|فولاذ مقاوم للصدأ)/,'ستانلس ستيل',0.11);
+  cue(/(?:كربون ستيل|carbon steel|فولاذ كربوني)/,'فولاذ كربوني',0.11);
+
+  // Filters / automotive service.
+  cue(/(?:فلتر وقود|مرشح وقود|fuel filters?)/,'فلتر وقود',0.12);
+  cue(/(?:فلتر هواء المقصور|cabin air filter)/,'فلتر هواء المقصورة',0.13);
+  cue(/(?:فلتر رملي|sand filter)/,'فلتر رملي',0.12);
+  cue(/(?:فلتر خط.*غاز|مرشح.*غاز|gas pipeline filter)/,'فلتر خط غاز',0.12);
+
+  // Batteries and neighbouring electrical accessories.
+  cue(/(?:lead[ -]?acid|رصاص.*حمض|حمض.*رصاص)/,'بطارية رصاص حمضية',0.145);
+  cue(/(?:nickel[ -]?cadmium|نيكل.*كادميوم|nicd)/,'بطارية نيكل كادميوم',0.145);
+  cue(/(?:mercury(?: oxide)? battery|أكسيد الزئبق|اكسيد الزئبق)/,'بطارية أكسيد الزئبق',0.145);
+  cue(/(?:vehicle battery|car battery|بطاري(?:ة|ات) (?:سيار|مركب))/, 'بطارية مركبة',0.13);
+  cue(/(?:low[ -]?voltage|\blv\b|جهد منخفض).*(?:cable accessories|cable lug|ملحقات.*كابل|اكسسوارات.*كابل)|(?:cable accessories|cable lug|ملحقات.*كابل|اكسسوارات.*كابل).*(?:low[ -]?voltage|\blv\b|جهد منخفض)/,'ملحقات كابل جهد منخفض',0.30);
+  cue(/(?:medium[ -]?voltage|meduim[ -]?voltage|\bmv\b|جهد متوسط).*(?:cable accessories|cable lug|ملحقات.*كابل|اكسسوارات.*كابل)|(?:cable accessories|cable lug|ملحقات.*كابل|اكسسوارات.*كابل).*(?:medium[ -]?voltage|meduim[ -]?voltage|\bmv\b|جهد متوسط)/,'ملحقات كابل جهد متوسط',0.30);
+
+  // Hard-negative valve and pump-part discriminators.
+  cue(/(?:needle(?:\s+[a-z]+){0,2}\s+valves?|valves?(?:\s+[a-z]+){0,2}\s+needle|صمام.*إبر|صمام.*ابر)/,'صمام إبري',0.16);
+  cue(/(?:block and bleed|إغلاق.*تصريف|اغلاق.*تصريف)/,'صمام إغلاق وتصريف',0.16);
+  cue(/(?:swing (?:check|non[ -]?return) valves?|صمام.*(?:فحص.*تأرج|تأرج.*فحص))/, 'صمام فحص تأرجحي',0.17);
+  cue(/(?:pump impeller|impeller.*pump|مروحة.*مضخ)/,'مروحة مضخة',0.16);
+  cue(/(?:pump shaft|shaft.*pump|عمود.*مضخ)/,'عمود مضخة',0.16);
+  cue(/(?:pump barrel|جسم.*مضخ)/,'جسم مضخة',0.16);
+  cue(/(?:submersible pump.*(?:spare|parts)|(?:spare|parts).*submersible pump|قطع غيار.*مضخ.*غاطس)/,'قطع غيار مضخة غاطسة',0.17);
+  cue(/(?:centrifugal pump.*(?:spare|parts)|(?:spare|parts).*centrifugal pump|قطع غيار.*مضخ.*طارد)/,'قطع غيار مضخة طاردة مركزية',0.17);
+
+  // Fire/safety detection.
+  cue(/(?:كاشف دخان|كاشفات دخان|smoke detectors?)/,'كاشف دخان',0.13);
+  cue(/(?:كاشف حرار|كاشفات حرار|حساس حرار|heat (?:detectors?|sensors?)|heat sensor detector)/,'كاشف حرارة',0.15);
+  cue(/(?:طفاي(?:ة|ات) حريق|fire extinguishers?)/,'طفاية حريق',0.13);
+  cue(/(?:خوذ(?:ة|ات) سلام|safety helmets?)/,'خوذة سلامة',0.12);
+
+  return {delta,reasons};
+}
+
+function explicitDiscriminatorStrength(query,r){
+  const q=norm(query),t=norm([r.ar,r.en,r.description].filter(Boolean).join(' '));
+  const pairs=[
+    [/(?:lead[ -]?acid|رصاص.*حمض|حمض.*رصاص)/,0.98],[/(?:nickel[ -]?cadmium|نيكل.*كادميوم|nicd)/,0.98],[/(?:mercury(?: oxide)? battery|أكسيد الزئبق|اكسيد الزئبق)/,0.98],
+    [/(?:needle(?:\s+[a-z]+){0,2}\s+valves?|valves?(?:\s+[a-z]+){0,2}\s+needle|صمام.*إبر|صمام.*ابر)/,0.98],[/(?:block and bleed|إغلاق.*تصريف|اغلاق.*تصريف)/,0.98],[/(?:swing (?:check|non[ -]?return) valves?|صمام.*(?:فحص.*تأرج|تأرج.*فحص))/,0.99],
+    [/(?:pump impeller|impeller.*pump|مروحة.*مضخ)/,0.98],[/(?:pump shaft|shaft.*pump|عمود.*مضخ)/,0.98],[/(?:pump barrel|جسم.*مضخ)/,0.98],
+    [/(?:submersible pump.*(?:spare|parts)|(?:spare|parts).*submersible pump|قطع غيار.*مضخ.*غاطس)/,0.99],[/(?:centrifugal pump.*(?:spare|parts)|(?:spare|parts).*centrifugal pump|قطع غيار.*مضخ.*طارد)/,0.99],
+    [/(?:كاشف حرار|حساس حرار|heat (?:detectors?|sensors?))/,0.97],[/(?:كاشف دخان|حساس دخان|smoke (?:detectors?|sensors?))/,0.97],
+    [/(?:low[ -]?voltage|\blv\b|جهد منخفض).*(?:cable accessories|cable lug|ملحقات.*كابل|اكسسوارات.*كابل)|(?:cable accessories|cable lug|ملحقات.*كابل|اكسسوارات.*كابل).*(?:low[ -]?voltage|\blv\b|جهد منخفض)/,0.99],
+    [/(?:medium[ -]?voltage|meduim[ -]?voltage|\bmv\b|جهد متوسط).*(?:cable accessories|cable lug|ملحقات.*كابل|اكسسوارات.*كابل)|(?:cable accessories|cable lug|ملحقات.*كابل|اكسسوارات.*كابل).*(?:medium[ -]?voltage|meduim[ -]?voltage|\bmv\b|جهد متوسط)/,0.99]
+  ];
+  let best=0;for(const [re,w] of pairs)if(re.test(q)&&re.test(t))best=Math.max(best,w);return best;
+}
 function pretrainedDecision(query,base,semanticScores,list,opts={}){
   const topN=opts.topN||5;
   const byCode=new Map((base.candidates||[]).map(c=>[String(c.code),c]));
@@ -346,11 +437,13 @@ function pretrainedDecision(query,base,semanticScores,list,opts={}){
     const legacyCandidate=byCode.get(String(d.r.code));
     // Pretrained semantics drives retrieval; domain/concept + conservative legacy engine guard it.
     let score=0.60*semanticSupport+0.20*old.conceptRecall+0.10*old.lexical+0.10*(legacyCandidate?.score||0);
+    const domainAdj=domainRerankAdjustment(query,d.r); score+=domainAdj.delta;
     if(qc.has('garment')&&d.concepts.has('garment'))score+=0.035;
     if(qc.has('protection')&&d.concepts.has('protection'))score+=0.035;
     const cf=conflictPenalty(qc,d.concepts,d.r,qneg,d.domainConcepts); score=Math.max(0,Math.min(1,score-cf.p));
     const reasons=[];
     reasons.push('تشابه دلالي من النموذج العربي المحلي');
+    reasons.push(...domainAdj.reasons);
     if(old.conceptRecall>=0.5)reasons.push(...old.reasons.filter(x=>x.startsWith('تقارب دلالي')).slice(0,1));
     if(old.lexical>=0.25)reasons.push('يوجد دعم مباشر من ألفاظ الاسم/الوصف الرسمي');
     if(legacyCandidate?.score>=0.53)reasons.push('محرك التحقق المحافظ يدعم المرشح');
@@ -395,15 +488,23 @@ async function matchAsync(query,list,opts={}){
     if(generation!==BACKEND_GENERATION||backend!==EMBEDDING_BACKEND)throw new Error('Embedding backend changed during query inference.');
     const scores=pi.vectors.map(v=>dotDense(q,v));
     const result=pretrainedDecision(query,base,scores,list||[],opts);
-    // A strong deterministic legacy result remains the anchor unless the real semantic model is later calibrated
-    // on a labeled acceptance set. The model may still contribute alternatives in review/weak cases.
+    // Safety-first fusion: the deterministic matcher owns Top-1 until Zarra is calibrated on an
+    // independent labelled acceptance set. Zarra is retrieval-only here: it may enrich alternatives,
+    // but it must never demote an established deterministic Top-1 candidate.
     const legacy=global.MandatoryMatcher?global.MandatoryMatcher.match(query,list,{topN:Math.max(12,opts.topN||5)}):null;
-    if(legacy&&legacy.candidates?.length&&legacy.confidence>=0.80){
+    if(legacy&&legacy.candidates?.length){
+      const neuralTop=result.candidates[0];
+      const explicitStrength=neuralTop?explicitDiscriminatorStrength(query,neuralTop):0;
+      const allowExplicitOverride=!!(neuralTop&&explicitStrength>=0.97&&result.confidence>=0.56&&!neuralTop.conflicts?.length);
+      if(allowExplicitOverride){result.explicitDomainOverride=true;result.zarraMode='retrieval-plus-explicit-domain-override';return result;}
       const anchor=String(legacy.candidates[0].code),pos=result.candidates.findIndex(c=>String(c.code)===anchor);
       if(pos>0)result.candidates.unshift(...result.candidates.splice(pos,1));
       else if(pos<0)result.candidates.unshift(legacy.candidates[0]);
       result.candidates.length=Math.min(result.candidates.length,opts.topN||5);
-      result.status=legacy.status;result.confidence=Math.max(result.confidence||0,legacy.confidence);result.legacyAnchor=true;
+      result.status=legacy.status;
+      result.confidence=legacy.confidence;
+      result.legacyAnchor=true;
+      result.zarraMode='retrieval-only';
     }
     return result;
   }catch(err){
@@ -412,6 +513,6 @@ async function matchAsync(query,list,opts={}){
 }
 function clearPretrainedCache(){BACKEND_GENERATION++;}
 
-global.MandatorySemanticMatcher={match,matchAsync,registerEmbeddingBackend,embeddingBackendInfo,clearPretrainedCache,version:VERSION,concepts,negatedConcepts,conceptAnalysis,words,buildIndex:build,_test:{l2normalize,dotDense,documentText,pretrainedDecision,validateDenseVector,legacyGuardReason,aliasKey}};
+global.MandatorySemanticMatcher={match,matchAsync,registerEmbeddingBackend,embeddingBackendInfo,clearPretrainedCache,version:VERSION,concepts,negatedConcepts,conceptAnalysis,words,buildIndex:build,_test:{l2normalize,dotDense,documentText,pretrainedDecision,validateDenseVector,legacyGuardReason,aliasKey,explicitDiscriminatorStrength}};
 if(typeof module!=='undefined'&&module.exports)module.exports=global.MandatorySemanticMatcher;
 })(typeof window!=='undefined'?window:globalThis);
